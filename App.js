@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +14,8 @@ import {
   View,
   Text,
   StatusBar,
+  TouchableOpacity,
+  Animated,
 } from 'react-native';
 
 import {
@@ -32,18 +34,34 @@ import SideMenu from 'react-native-side-menu';
 const App: () => React$Node = () => {
   const shoppingCart = <Icon name="shopping-cart" size={40} color="#1F72BD" />;
   const bars = <Icon name="bars" size={40} color="#1F72BD" />;
+  const times = <Icon name="times" size={40} color="#1F72BD" />;
+
+  const [openMenu, setOpenMenu] = useState(false);
+  function menu() {}
+  console.log(openMenu);
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
+
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
+          <Animated.View style={openMenu ? styles.openMenu : styles.closedMenu}>
+            <Text>Test Menu</Text>
+            <TouchableOpacity
+              onPress={() => setOpenMenu(!openMenu)}
+              style={styles.headerIcons}>
+              <Text>{times}</Text>
+            </TouchableOpacity>
+          </Animated.View>
           <View style={styles.header}>
-            <View style={styles.headerIcons}>
+            <TouchableOpacity
+              onPress={() => setOpenMenu(!openMenu)}
+              style={styles.headerIcons}>
               <Text>{bars}</Text>
-            </View>
+            </TouchableOpacity>
             <View>
               <Text style={styles.titleText}>BaseEcom</Text>
               <Search />
@@ -68,8 +86,43 @@ const App: () => React$Node = () => {
 };
 
 const styles = StyleSheet.create({
+  openMenu: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-end',
+    borderWidth: 5,
+    borderColor: 'black',
+
+    position: 'absolute',
+    backgroundColor: 'white',
+    height: 1000,
+    width: 400,
+    top: 0,
+    left: 0,
+    zIndex: 99,
+    transform: [{translateX: -200}],
+  },
+  closedMenu: {
+    display: 'flex',
+
+    alignItems: 'flex-end',
+    borderWidth: 5,
+    borderColor: 'black',
+    position: 'absolute',
+    backgroundColor: 'red',
+    height: 1000,
+    width: 400,
+    top: 0,
+    left: 0,
+    zIndex: 99,
+
+    transform: [{translateX: -400}],
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
+    zIndex: 1,
+    position: 'relative',
   },
   engine: {
     position: 'absolute',

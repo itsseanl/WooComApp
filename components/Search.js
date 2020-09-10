@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchBar: {
-    width: 300,
+    width: 250,
     height: 40,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 15,

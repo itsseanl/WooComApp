@@ -26,15 +26,12 @@ import {
 
 import Search from './components/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Home from './components/Home';
+import SideMenu from 'react-native-side-menu';
 
 const App: () => React$Node = () => {
-  const customData = require('./API.json');
-  const key = customData.API[0].key;
-  const secret = customData.API[0].secret;
-  console.log(key);
-
-  const shoppingCart = <Icon name="shopping-cart" size={30} color="#1F72BD" />;
-  const bars = <Icon name="bars" size={30} color="#1F72BD" />;
+  const shoppingCart = <Icon name="shopping-cart" size={40} color="#1F72BD" />;
+  const bars = <Icon name="bars" size={40} color="#1F72BD" />;
 
   return (
     <>
@@ -51,7 +48,7 @@ const App: () => React$Node = () => {
               <Text style={styles.titleText}>BaseEcom</Text>
               <Search />
             </View>
-            <View style={styles.headerIcons}>
+            <View style={styles.headerIcons} size={30}>
               <Text>{shoppingCart}</Text>
             </View>
           </View>
@@ -62,8 +59,7 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <Text>{key}</Text>
-            <Text>{secret}</Text>
+            <Home />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    height: 95,
+    height: 90,
     flexDirection: 'column',
   },
   titleText: {

@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -32,12 +32,22 @@ import Home from './components/Home';
 import SideMenu from 'react-native-side-menu';
 
 const App: () => React$Node = () => {
+  //fontawesome icons
   const shoppingCart = <Icon name="shopping-cart" size={40} color="#1F72BD" />;
   const bars = <Icon name="bars" size={40} color="#1F72BD" />;
   const times = <Icon name="times" size={40} color="#1F72BD" />;
 
   const [openMenu, setOpenMenu] = useState(false);
-  function menu() {}
+
+  const slideAnim = useRef(new Animated.Value(-400)).current;
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: -200,
+      duration: 3000,
+    }).start();
+  }, [openMenu]);
+
   console.log(openMenu);
 
   return (
@@ -48,7 +58,9 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Animated.View style={openMenu ? styles.openMenu : styles.closedMenu}>
+          <Animated.View
+            style={(styles.menu, {transform: [{translateX: slideAnim}]})}>
+            {/* //openMenu ? styles.openMenu : styles.closedMenu */}
             <Text>Test Menu</Text>
             <TouchableOpacity
               onPress={() => setOpenMenu(!openMenu)}
@@ -86,7 +98,7 @@ const App: () => React$Node = () => {
 };
 
 const styles = StyleSheet.create({
-  openMenu: {
+  menu: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -101,7 +113,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     zIndex: 99,
-    transform: [{translateX: -200}],
   },
   closedMenu: {
     display: 'flex',

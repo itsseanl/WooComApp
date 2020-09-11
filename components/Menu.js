@@ -18,7 +18,7 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Menu = ({openMenu, handleOpenMenu}) => {
+const Menu = ({openMenu, handleOpenMenu, customData}) => {
   //fontawesome icons
   const times = <Icon name="times" size={40} color="#1F72BD" />;
 

@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 
 import Products from './Products';
-const Home = () => {
-  const customData = require('../API.json');
+const Home = ({customData, searchType}) => {
+  // const customData = require('../API.json');
 
   const [gotResults, setGotResults] = useState(false);
   var myHeaders = new Headers();
@@ -25,10 +25,7 @@ const Home = () => {
       headers: myHeaders,
       redirect: 'follow',
     };
-    fetch(
-      'https://baseecom.sparkrefinery.com/wp-json/wc/v3/products',
-      requestOptions,
-    )
+    fetch(`${searchType}`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         setProducts(result);

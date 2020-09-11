@@ -27,13 +27,20 @@ import Home from './components/Home';
 import Menu from './components/Menu';
 
 const App: () => React$Node = () => {
+  //API data
+  const customData = require('./API.json');
+
   //fontawesome icons
   const shoppingCart = <Icon name="shopping-cart" size={40} color="#1F72BD" />;
   const bars = <Icon name="bars" size={40} color="#1F72BD" />;
-  const times = <Icon name="times" size={40} color="#1F72BD" />;
 
   //menu vars
   const [openMenu, setOpenMenu] = useState(false);
+
+  //searchType -- changing will change fetch request on homepage
+  const [searchType, setSearchType] = useState(
+    'https://baseecom.sparkrefinery.com/wp-json/wc/v3/products',
+  );
 
   function handleOpenMenu() {
     setOpenMenu(!openMenu);
@@ -69,11 +76,15 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <Home />
+            <Home customData={customData} searchType={searchType} />
           </View>
         </ScrollView>
       </SafeAreaView>
-      <Menu handleOpenMenu={handleOpenMenu} openMenu={openMenu} />
+      <Menu
+        handleOpenMenu={handleOpenMenu}
+        openMenu={openMenu}
+        customData={customData}
+      />
     </>
   );
 };
@@ -86,7 +97,6 @@ const styles = StyleSheet.create({
   engine: {
     right: 0,
   },
-
   header: {
     color: '#1F72BD',
     flexDirection: 'row',

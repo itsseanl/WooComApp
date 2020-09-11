@@ -16,20 +16,14 @@ import {
   StatusBar,
   TouchableOpacity,
   Animated,
+  Dimensions,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import Search from './components/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from './components/Home';
-import SideMenu from 'react-native-side-menu';
 
 const App: () => React$Node = () => {
   //fontawesome icons
@@ -37,14 +31,24 @@ const App: () => React$Node = () => {
   const bars = <Icon name="bars" size={40} color="#1F72BD" />;
   const times = <Icon name="times" size={40} color="#1F72BD" />;
 
+  //menu vars
   const [openMenu, setOpenMenu] = useState(false);
+  const [animValue, setAnimValue] = useState(
+    -(Dimensions.get('window').width / 2),
+  );
+  const slideAnim = useRef(new Animated.Value(animValue)).current;
 
-  const slideAnim = useRef(new Animated.Value(-400)).current;
-
+  //slideout effect
   useEffect(() => {
+    if (animValue == -(Dimensions.get('window').width / 2)) {
+      setAnimValue(0);
+    } else {
+      setAnimValue(-(Dimensions.get('window').width / 2));
+    }
     Animated.timing(slideAnim, {
-      toValue: -200,
-      duration: 3000,
+      toValue: animValue,
+      duration: 500,
+      useNativeDriver: true, // <-- Add this
     }).start();
   }, [openMenu]);
 
@@ -54,26 +58,17 @@ const App: () => React$Node = () => {
     <>
       <StatusBar barStyle="dark-content" />
 
-      <SafeAreaView>
+      <SafeAreaView style={{}}>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Animated.View
-            style={(styles.menu, {transform: [{translateX: slideAnim}]})}>
-            {/* //openMenu ? styles.openMenu : styles.closedMenu */}
-            <Text>Test Menu</Text>
-            <TouchableOpacity
-              onPress={() => setOpenMenu(!openMenu)}
-              style={styles.headerIcons}>
-              <Text>{times}</Text>
-            </TouchableOpacity>
-          </Animated.View>
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => setOpenMenu(!openMenu)}
               style={styles.headerIcons}>
               <Text>{bars}</Text>
             </TouchableOpacity>
+
             <View>
               <Text style={styles.titleText}>BaseEcom</Text>
               <Search />
@@ -93,50 +88,75 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      <Animated.View
+        style={[
+          styles.menu,
+          {
+            transform: [{translateX: slideAnim}],
+          },
+        ]}
+        onPress={(e) => stopPropagation()}>
+        {/* //openMenu ? styles.openMenu : styles.closedMenu */}
+        <Text>Test Menu</Text>
+        <TouchableOpacity
+          onPress={() => setOpenMenu(!openMenu)}
+          style={styles.closeMenu}>
+          <Text>{times}</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  homeContainer: {
+    overflow: 'visible',
+  },
+  closeMenu: {
+    height: 50,
+    width: 50,
+    flex: 1,
+    borderWidth: 2,
+    borderColor: 'green',
+    elevation: 11,
+    position: 'absolute',
+    zIndex: 9999999999,
+  },
   menu: {
     display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-end',
-    borderWidth: 5,
-    borderColor: 'black',
-
-    position: 'absolute',
+    borderWidth: 2,
+    borderColor: 'green',
     backgroundColor: 'white',
-    height: 1000,
-    width: 400,
+    position: 'absolute',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width / 2,
     top: 0,
     left: 0,
-    zIndex: 99,
+    zIndex: 9999999,
+    elevation: 999,
+    overflow: 'visible',
+    flex: 1,
   },
-  closedMenu: {
+  menuView: {
+    flex: 1,
+    elevation: 9999,
+    // overflow: 'visible',
     display: 'flex',
-
-    alignItems: 'flex-end',
     borderWidth: 5,
     borderColor: 'black',
     position: 'absolute',
+    height: 150,
+    width: 500,
     backgroundColor: 'red',
-    height: 1000,
-    width: 400,
-    top: 0,
-    left: 0,
-    zIndex: 99,
 
-    transform: [{translateX: -400}],
+    zIndex: 9999,
   },
   scrollView: {
     backgroundColor: Colors.lighter,
     zIndex: 1,
-    position: 'relative',
   },
   engine: {
-    position: 'absolute',
     right: 0,
   },
 
@@ -145,13 +165,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
   },
   headerIcons: {
     justifyContent: 'flex-end',
     alignItems: 'center',
-    flex: 1,
     height: 90,
+    width: 50,
+    flex: 1,
     flexDirection: 'column',
+    position: 'relative',
+    elevation: 1,
   },
   titleText: {
     color: '#1F72BD',
@@ -163,32 +187,6 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: Colors.white,
     color: 'red',
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 

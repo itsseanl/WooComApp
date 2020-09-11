@@ -54,7 +54,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   search: {
     padding: 10,
-
     margin: 'auto',
     display: 'flex',
     justifyContent: 'center',

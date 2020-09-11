@@ -24,6 +24,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Search from './components/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from './components/Home';
+import Menu from './components/Menu';
 
 const App: () => React$Node = () => {
   //fontawesome icons
@@ -33,26 +34,10 @@ const App: () => React$Node = () => {
 
   //menu vars
   const [openMenu, setOpenMenu] = useState(false);
-  const [animValue, setAnimValue] = useState(
-    -(Dimensions.get('window').width / 2),
-  );
-  const slideAnim = useRef(new Animated.Value(animValue)).current;
 
-  //slideout effect
-  useEffect(() => {
-    if (animValue == -(Dimensions.get('window').width / 2)) {
-      setAnimValue(0);
-    } else {
-      setAnimValue(-(Dimensions.get('window').width / 2));
-    }
-    Animated.timing(slideAnim, {
-      toValue: animValue,
-      duration: 500,
-      useNativeDriver: true, // <-- Add this
-    }).start();
-  }, [openMenu]);
-
-  console.log(openMenu);
+  function handleOpenMenu() {
+    setOpenMenu(!openMenu);
+  }
 
   return (
     <>
@@ -88,70 +73,12 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-
-      <Animated.View
-        style={[
-          styles.menu,
-          {
-            transform: [{translateX: slideAnim}],
-          },
-        ]}
-        onPress={(e) => stopPropagation()}>
-        {/* //openMenu ? styles.openMenu : styles.closedMenu */}
-        <Text>Test Menu</Text>
-        <TouchableOpacity
-          onPress={() => setOpenMenu(!openMenu)}
-          style={styles.closeMenu}>
-          <Text>{times}</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <Menu handleOpenMenu={handleOpenMenu} openMenu={openMenu} />
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  homeContainer: {
-    overflow: 'visible',
-  },
-  closeMenu: {
-    height: 50,
-    width: 50,
-    flex: 1,
-    borderWidth: 2,
-    borderColor: 'green',
-    elevation: 11,
-    position: 'absolute',
-    zIndex: 9999999999,
-  },
-  menu: {
-    display: 'flex',
-    borderWidth: 2,
-    borderColor: 'green',
-    backgroundColor: 'white',
-    position: 'absolute',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width / 2,
-    top: 0,
-    left: 0,
-    zIndex: 9999999,
-    elevation: 999,
-    overflow: 'visible',
-    flex: 1,
-  },
-  menuView: {
-    flex: 1,
-    elevation: 9999,
-    // overflow: 'visible',
-    display: 'flex',
-    borderWidth: 5,
-    borderColor: 'black',
-    position: 'absolute',
-    height: 150,
-    width: 500,
-    backgroundColor: 'red',
-
-    zIndex: 9999,
-  },
   scrollView: {
     backgroundColor: Colors.lighter,
     zIndex: 1,

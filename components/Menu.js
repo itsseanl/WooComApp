@@ -18,12 +18,12 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Menu = () => {
+const Menu = ({openMenu, handleOpenMenu}) => {
   //fontawesome icons
   const times = <Icon name="times" size={40} color="#1F72BD" />;
 
   //menu vars
-  const [openMenu, setOpenMenu] = useState(false);
+  //   const [openMenu, setOpenMenu] = useState(false);
   const [animValue, setAnimValue] = useState(
     -(Dimensions.get('window').width / 2),
   );
@@ -58,7 +58,7 @@ const Menu = () => {
         {/* //openMenu ? styles.openMenu : styles.closedMenu */}
         <Text>Test Menu</Text>
         <TouchableOpacity
-          onPress={() => setOpenMenu(!openMenu)}
+          onPress={() => handleOpenMenu(!openMenu)}
           style={styles.closeMenu}>
           <Text>{times}</Text>
         </TouchableOpacity>

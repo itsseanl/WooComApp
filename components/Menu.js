@@ -10,6 +10,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
+  Image,
   Text,
   TouchableOpacity,
   Animated,
@@ -17,6 +18,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MenuCats from './MenuCats';
 
 const Menu = ({openMenu, handleOpenMenu, customData}) => {
   //fontawesome icons
@@ -45,6 +47,30 @@ const Menu = ({openMenu, handleOpenMenu, customData}) => {
 
   console.log(openMenu);
 
+  const [categories, setCategories] = useState('');
+  const [gotResults, setGotResults] = useState(false);
+  var myHeaders = new Headers();
+  useEffect(() => {
+    myHeaders.append('Authorization', `Basic ${customData.API[0].basicAuth}`);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+    fetch(
+      'https://baseecom.sparkrefinery.com/wp-json/wc/v3/products/categories',
+      requestOptions,
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        setCategories(result);
+        setGotResults(true);
+        console.log(categories);
+      })
+      .catch((error) => console.log('error', error));
+  }, []);
+
   return (
     <>
       <Animated.View
@@ -55,13 +81,20 @@ const Menu = ({openMenu, handleOpenMenu, customData}) => {
           },
         ]}
         onPress={(e) => stopPropagation()}>
-        {/* //openMenu ? styles.openMenu : styles.closedMenu */}
         <Text>Test Menu</Text>
         <TouchableOpacity
           onPress={() => handleOpenMenu(!openMenu)}
           style={styles.closeMenu}>
           <Text>{times}</Text>
         </TouchableOpacity>
+        {gotResults && categories != '' ? (
+          <MenuCats categories={categories} />
+        ) : (
+          <Image
+            source={require('../public/loading.gif')}
+            style={{width: 100, height: 100}}
+          />
+        )}
       </Animated.View>
     </>
   );

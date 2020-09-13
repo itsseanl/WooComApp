@@ -16,13 +16,14 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MenuCats from './MenuCats';
 
-const Menu = ({openMenu, handleOpenMenu, customData}) => {
+const Menu = ({openMenu, handleOpenMenu, handleSearchType, customData}) => {
   //fontawesome icons
-  const times = <Icon name="times" size={40} color="#1F72BD" />;
+  const times = <Icon name="times" size={30} color="#1F72BD" />;
 
   //menu vars
   //   const [openMenu, setOpenMenu] = useState(false);
@@ -40,7 +41,7 @@ const Menu = ({openMenu, handleOpenMenu, customData}) => {
     }
     Animated.timing(slideAnim, {
       toValue: animValue,
-      duration: 500,
+      duration: 200,
       useNativeDriver: true, // <-- Add this
     }).start();
   }, [openMenu]);
@@ -81,14 +82,19 @@ const Menu = ({openMenu, handleOpenMenu, customData}) => {
           },
         ]}
         onPress={(e) => stopPropagation()}>
-        <Text>Test Menu</Text>
-        <TouchableOpacity
-          onPress={() => handleOpenMenu(!openMenu)}
-          style={styles.closeMenu}>
-          <Text>{times}</Text>
-        </TouchableOpacity>
+        <View style={styles.menuHeader}>
+          <Text style={styles.menuTitle}>Categories</Text>
+          <TouchableOpacity
+            onPress={() => handleOpenMenu(!openMenu)}
+            style={styles.closeMenu}>
+            <Text>{times}</Text>
+          </TouchableOpacity>
+        </View>
         {gotResults && categories != '' ? (
-          <MenuCats categories={categories} />
+          <MenuCats
+            categories={categories}
+            handleSearchType={handleSearchType}
+          />
         ) : (
           <Image
             source={require('../public/loading.gif')}
@@ -103,8 +109,7 @@ const Menu = ({openMenu, handleOpenMenu, customData}) => {
 const styles = StyleSheet.create({
   menu: {
     display: 'flex',
-    borderWidth: 2,
-    borderColor: 'green',
+    flexDirection: 'column',
     backgroundColor: 'white',
     position: 'absolute',
     height: Dimensions.get('window').height,
@@ -112,19 +117,35 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     zIndex: 9999999,
-    elevation: 999,
+    elevation: 10,
     overflow: 'visible',
     flex: 1,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 10,
+  },
+  menuTitle: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#1F72BD',
+  },
+  menuHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: Colors.lighter,
+    height: 118,
   },
   closeMenu: {
     height: 50,
     width: 50,
-    flex: 1,
-    borderWidth: 2,
-    borderColor: 'green',
-    elevation: 11,
-    position: 'absolute',
     zIndex: 9999999999,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

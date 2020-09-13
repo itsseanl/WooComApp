@@ -10,10 +10,11 @@ import {
   TextInput,
 } from 'react-native';
 
-const Products = ({results}) => {
+const Products = ({results, handleAddToCart}) => {
   //   console.log(typeof results);
+  // console.log(results);
   results = JSON.parse(results);
-  console.log(typeof results);
+  // console.log('Products: ' + typeof results);
   return (
     <>
       {results.map((product, index) => {
@@ -26,7 +27,9 @@ const Products = ({results}) => {
             />
             <Text>{product.name}</Text>
             <Text>${product.price}</Text>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleAddToCart(product.id)}>
               <Text style={styles.buttonText}>Quick Add</Text>
             </TouchableOpacity>
           </View>

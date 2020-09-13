@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 
 import Products from './Products';
-const Home = ({customData, searchType}) => {
+const Home = ({customData, searchType, handleAddToCart}) => {
   // const customData = require('../API.json');
-
+  console.log('home.js: ' + searchType);
   const [gotResults, setGotResults] = useState(false);
-  var myHeaders = new Headers();
   const [products, setProducts] = useState('');
+
+  var myHeaders = new Headers();
 
   useEffect(() => {
     myHeaders.append('Authorization', `Basic ${customData.API[0].basicAuth}`);
@@ -37,7 +38,11 @@ const Home = ({customData, searchType}) => {
   return (
     <View style={styles.search}>
       {gotResults && products != '' ? (
-        <Products results={products} />
+        <Products
+          key={products}
+          results={products}
+          handleAddToCart={handleAddToCart}
+        />
       ) : (
         <Image
           source={require('../public/loading.gif')}

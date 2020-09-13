@@ -25,7 +25,7 @@ import Search from './components/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from './components/Home';
 import Menu from './components/Menu';
-
+import Cart from './components/Cart';
 const App: () => React$Node = () => {
   //API data
   const customData = require('./API.json');
@@ -36,14 +36,40 @@ const App: () => React$Node = () => {
 
   //menu vars
   const [openMenu, setOpenMenu] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
 
+  //cart count
+  const [addToCart, setAddToCart] = useState(0);
+  //cart contents
+  const [cartContents, setCartContents] = useState([]);
   //searchType -- changing will change fetch request on homepage
   const [searchType, setSearchType] = useState(
     'https://baseecom.sparkrefinery.com/wp-json/wc/v3/products',
   );
 
+  //function to allow updating cart count
+  function handleAddToCart(id) {
+    console.log(addToCart);
+    let theCart = cartContents;
+    theCart.push(id);
+    setCartContents(theCart);
+    console.log(theCart);
+    setAddToCart(addToCart + 1);
+  }
+  //menu to allow Menu.js to update searchType
+  function handleSearchType(newSearch) {
+    console.log(newSearch);
+    setOpenMenu(!openMenu);
+    setSearchType(newSearch);
+  }
+
+  //function to allow Menu.js to update menu position
   function handleOpenMenu() {
     setOpenMenu(!openMenu);
+  }
+
+  function handleOpenCart() {
+    setOpenCart(!openCart);
   }
 
   return (
@@ -66,7 +92,14 @@ const App: () => React$Node = () => {
               <Search />
             </View>
             <View style={styles.headerIcons} size={30}>
-              <Text>{shoppingCart}</Text>
+              <Text key={addToCart} style={styles.cartNum}>
+                {addToCart}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setOpenCart(!openCart)}
+                style={styles.headerIcons}>
+                <Text>{shoppingCart}</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -76,20 +109,51 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <Home customData={customData} searchType={searchType} />
+            <Home
+              key={searchType}
+              customData={customData}
+              searchType={searchType}
+              handleAddToCart={handleAddToCart}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
       <Menu
         handleOpenMenu={handleOpenMenu}
+        handleSearchType={handleSearchType}
         openMenu={openMenu}
         customData={customData}
+      />
+
+      <Cart
+        customData={customData}
+        handleOpenCart={handleOpenCart}
+        openCart={openCart}
       />
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  cart: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    position: 'absolute',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width / 2,
+    top: 0,
+    right: 0,
+    zIndex: 9999999,
+    elevation: 10,
+    overflow: 'visible',
+    flex: 1,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 10,
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
     zIndex: 1,
@@ -124,6 +188,25 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: Colors.white,
     color: 'red',
+  },
+  cartNum: {
+    backgroundColor: 'red',
+    position: 'absolute',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'red',
+    height: 25,
+    width: 25,
+    textAlign: 'center',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    paddingTop: 3,
+    zIndex: 99,
+    top: 42,
+    right: 10,
   },
 });
 

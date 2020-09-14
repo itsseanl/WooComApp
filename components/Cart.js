@@ -19,24 +19,21 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import MenuCats from './MenuCats';
 
 const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
   //fontawesome icons
   const times = <Icon name="times" size={30} color="#1F72BD" />;
 
   //menu vars
-  const [animValue, setAnimValue] = useState(
-    Dimensions.get('window').width / 2,
-  );
+  const [animValue, setAnimValue] = useState(Dimensions.get('window').width);
   const slideAnim = useRef(new Animated.Value(animValue)).current;
 
   //slideout effect
   useEffect(() => {
-    if (animValue == Dimensions.get('window').width / 2) {
+    if (animValue == Dimensions.get('window').width) {
       setAnimValue(0);
     } else {
-      setAnimValue(Dimensions.get('window').width / 2);
+      setAnimValue(Dimensions.get('window').width);
     }
     Animated.timing(slideAnim, {
       toValue: animValue,
@@ -47,7 +44,7 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
 
   console.log(openCart);
 
-  const [products, setProducts] = useState('');
+  const [products, setProducts] = useState([]);
   const [gotResults, setGotResults] = useState(false);
   var myHeaders = new Headers();
   useEffect(() => {
@@ -65,7 +62,7 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
         )
           .then((response) => response.text())
           .then((result) => {
-            setProducts(result);
+            setProducts(...result);
             setGotResults(true);
             console.log(products);
           })
@@ -73,10 +70,11 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
       });
     }
   }, []);
-
+  console.log(cartContents);
   return (
     <>
-      <Animated.View style={(styles.cart, [{translateX: slideAnim}])}>
+      <Animated.View
+        style={[styles.cart, {transform: [{translateX: slideAnim}]}]}>
         <TouchableOpacity
           onPress={() => handleOpenCart()}
           style={styles.closeMenu}>
@@ -84,7 +82,7 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
         </TouchableOpacity>
         {cartContents ? (
           cartContents.map((product) => {
-            <Text>{product}</Text>;
+            return <Text>{product}</Text>;
           })
         ) : (
           <></>
@@ -101,11 +99,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     position: 'absolute',
     height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width / 2,
+    width: Dimensions.get('window').width,
     top: 0,
     right: 0,
-    zIndex: 9999999,
-    elevation: 10,
+    zIndex: 99999,
+    elevation: 1111,
     overflow: 'visible',
     flex: 1,
     shadowColor: 'rgba(0,0,0,0.1)',

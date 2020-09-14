@@ -118,17 +118,18 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
+
       <Menu
         handleOpenMenu={handleOpenMenu}
         handleSearchType={handleSearchType}
         openMenu={openMenu}
         customData={customData}
       />
-
       <Cart
         customData={customData}
         handleOpenCart={handleOpenCart}
         openCart={openCart}
+        cartContents={cartContents}
       />
     </>
   );

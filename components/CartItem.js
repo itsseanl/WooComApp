@@ -12,13 +12,16 @@ import {
   View,
   Image,
   Text,
+  TextInput,
   TouchableOpacity,
   Animated,
   Dimensions,
 } from 'react-native';
 
-const CartItem = ({product}) => {
+const CartItem = ({product, customData}) => {
   var myHeaders = new Headers();
+
+  const [item, setItem] = useState('');
   useEffect(() => {
     if (product) {
       myHeaders.append('Authorization', `Basic ${customData.API[0].basicAuth}`);
@@ -33,19 +36,31 @@ const CartItem = ({product}) => {
       )
         .then((response) => response.text())
         .then((result) => {
-          setProducts(...result);
-          setGotResults(true);
-          console.log(products);
+          setItem(JSON.parse(result));
+          console.log(result.name);
         })
         .catch((error) => console.log('error', error));
     }
   }, []);
+  console.log(item.name);
   return (
     <>
-      {product ? (
-        product.map((product) => {
-          return <Text>{product.name}</Text>;
-        })
+      {item ? (
+        <View>
+          <Image source={{uri: item.images[0].src}} style={styles.image} />
+          <Text>{item.name}</Text>
+          <View style={styles.qty}>
+            <Text>Qty:</Text>
+            <TextInput style={styles.textInput}>1</TextInput>
+          </View>
+
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Remove</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <></>
       )}
@@ -54,6 +69,35 @@ const CartItem = ({product}) => {
 };
 
 const styles = StyleSheet.create({
+  qty: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  textInput: {
+    borderWidth: 2,
+    borderColor: 'gray',
+    width: 40,
+    padding: 0,
+    paddingLeft: 5,
+    height: 20,
+  },
+  btn: {
+    backgroundColor: '#1F72BD',
+    width: 100,
+    marginBottom: 5,
+    marginTop: 5,
+    padding: 5,
+  },
+  btnText: {
+    color: 'white',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
   cart: {
     display: 'flex',
     flexDirection: 'column',

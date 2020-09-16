@@ -20,7 +20,13 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CartItem from './CartItem';
-const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
+const Cart = ({
+  customData,
+  cartContents,
+  handleOpenCart,
+  handleRemoveFromCart,
+  openCart,
+}) => {
   //fontawesome icons
   const times = <Icon name="times" size={30} color="#1F72BD" />;
 
@@ -44,33 +50,12 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
 
   console.log(openCart);
 
-  const [products, setProducts] = useState([]);
-  const [gotResults, setGotResults] = useState(false);
-  var myHeaders = new Headers();
-  // useEffect(() => {
-  //   if (cartContents) {
-  //     myHeaders.append('Authorization', `Basic ${customData.API[0].basicAuth}`);
-  //     var requestOptions = {
-  //       method: 'GET',
-  //       headers: myHeaders,
-  //       redirect: 'follow',
-  //     };
-  //     cartContents.map((product) => {
-  //       fetch(
-  //         `https://baseecom.sparkrefinery.com/wp-json/wc/v3/products/${product}`,
-  //         requestOptions,
-  //       )
-  //         .then((response) => response.text())
-  //         .then((result) => {
-  //           setProducts(...result);
-  //           setGotResults(true);
-  //           console.log(products);
-  //         })
-  //         .catch((error) => console.log('error', error));
-  //     });
-  //   }
-  // }, []);
-  console.log(cartContents);
+  let findDuplicates = (cartContents) =>
+    cartContents.filter((item, index) => cartContents.indexOf(item) != index);
+
+  let duplicates = findDuplicates(cartContents); // All duplicates
+
+  console.log(duplicates);
   return (
     <>
       <Animated.View
@@ -82,7 +67,14 @@ const Cart = ({customData, cartContents, handleOpenCart, openCart}) => {
         </TouchableOpacity>
         {cartContents ? (
           cartContents.map((product) => {
-            return <CartItem product={product} customData={customData} />;
+            return (
+              <CartItem
+                key={product}
+                product={product}
+                customData={customData}
+                handleRemoveFromCart={handleRemoveFromCart}
+              />
+            );
           })
         ) : (
           <></>

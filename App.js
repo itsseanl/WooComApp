@@ -49,12 +49,23 @@ const App: () => React$Node = () => {
 
   //function to allow updating cart count
   function handleAddToCart(id) {
-    console.log(addToCart);
+    console.log('current addToCart: ' + addToCart);
     let theCart = cartContents;
     theCart.push(id);
     setCartContents(theCart);
-    console.log(theCart);
+    console.log('handleaddtocart cart: ' + theCart);
     setAddToCart(addToCart + 1);
+  }
+
+  function handleRemoveFromCart(id) {
+    let theCart = cartContents;
+    console.log('handleremove id:' + id);
+    const index = theCart.indexOf(id);
+    if (index > -1) {
+      theCart.splice(index, 1);
+      setCartContents(theCart);
+      setAddToCart(addToCart - 1);
+    }
   }
   //menu to allow Menu.js to update searchType
   function handleSearchType(newSearch) {
@@ -128,6 +139,7 @@ const App: () => React$Node = () => {
       <Cart
         customData={customData}
         handleOpenCart={handleOpenCart}
+        handleRemoveFromCart={handleRemoveFromCart}
         openCart={openCart}
         cartContents={cartContents}
       />

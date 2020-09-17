@@ -50,12 +50,24 @@ const Cart = ({
 
   console.log(openCart);
 
-  let findDuplicates = (cartContents) =>
-    cartContents.filter((item, index) => cartContents.indexOf(item) != index);
+  //find duplicates and quantity of dups per duplicate
+  let counts = {},
+    duplicate = 0;
+  cartContents.forEach(function (x) {
+    counts[x] = (counts[x] || 0) + 1;
+  });
 
-  let duplicates = findDuplicates(cartContents); // All duplicates
+  for (var key in counts) {
+    if (counts.hasOwnProperty(key)) {
+      counts[key] > 1 ? duplicate++ : duplicate;
+    }
+  }
 
-  console.log(duplicates);
+  //remove duplicates
+  cartContents = cartContents.filter((c, index) => {
+    return cartContents.indexOf(c) === index;
+  });
+
   return (
     <>
       <Animated.View
@@ -67,9 +79,15 @@ const Cart = ({
         </TouchableOpacity>
         {cartContents ? (
           cartContents.map((product) => {
+            let count = 1;
+            console.log(product);
+            if (counts[product]) {
+              count = counts[product];
+            }
             return (
               <CartItem
                 key={product}
+                count={count}
                 product={product}
                 customData={customData}
                 handleRemoveFromCart={handleRemoveFromCart}

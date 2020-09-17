@@ -18,7 +18,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-const CartItem = ({product, customData, handleRemoveFromCart}) => {
+const CartItem = ({product, customData, count, handleRemoveFromCart}) => {
   var myHeaders = new Headers();
 
   const [item, setItem] = useState('');
@@ -59,7 +59,7 @@ const CartItem = ({product, customData, handleRemoveFromCart}) => {
             <View key={'qtyview' + item.id} style={styles.qty}>
               <Text key={'qty' + item.id}>Qty:</Text>
               <TextInput key={'textInput' + item.id} style={styles.textInput}>
-                1
+                {count}
               </TextInput>
             </View>
           </View>

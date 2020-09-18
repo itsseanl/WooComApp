@@ -18,7 +18,15 @@ import {
   Dimensions,
 } from 'react-native';
 
-const CartItem = ({product, customData, count, handleRemoveFromCart}) => {
+const CartItem = ({
+  product,
+  customData,
+  count,
+  handleRemoveFromCart,
+  handleUpdateQty,
+}) => {
+  const [text, setText] = useState(count);
+
   var myHeaders = new Headers();
 
   const [item, setItem] = useState('');
@@ -58,8 +66,12 @@ const CartItem = ({product, customData, count, handleRemoveFromCart}) => {
             </Text>
             <View key={'qtyview' + item.id} style={styles.qty}>
               <Text key={'qty' + item.id}>Qty:</Text>
-              <TextInput key={'textInput' + item.id} style={styles.textInput}>
-                {count}
+              <TextInput
+                key={'textInput' + item.id}
+                style={styles.textInput}
+                onChangeText={(text) => setText(text)}
+                onSubmitEditing={() => handleUpdateQty(item.id, text)}>
+                {text}
               </TextInput>
             </View>
           </View>
@@ -72,7 +84,7 @@ const CartItem = ({product, customData, count, handleRemoveFromCart}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => handleRemoveFromCart(item.id)}
+              onPress={() => handleRemoveFromCart(item.id, text)}
               key={'remove' + item.id}>
               <Text key={'removeText' + item.id} style={styles.btnText}>
                 Remove

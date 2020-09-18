@@ -57,14 +57,30 @@ const App: () => React$Node = () => {
     setAddToCart(addToCart + 1);
   }
 
-  function handleRemoveFromCart(id) {
+  function handleUpdateQty(id, qty) {
+    let theCart = cartContents;
+
+    console.log('id: ' + id);
+    console.log('qty: ' + qty);
+    const index = theCart.indexOf(id);
+    if (index > -1 && qty > 0 && qty) {
+      setCartContents(theCart);
+      setAddToCart(qty);
+    }
+    if (qty == 0 && index > -1) {
+      theCart.splice(index, 1);
+      setCartContents(theCart);
+      setAddToCart(addToCart - 1);
+    }
+  }
+  function handleRemoveFromCart(id, qty) {
     let theCart = cartContents;
     console.log('handleremove id:' + id);
     const index = theCart.indexOf(id);
     if (index > -1) {
       theCart.splice(index, 1);
       setCartContents(theCart);
-      setAddToCart(addToCart - 1);
+      setAddToCart(addToCart - qty);
     }
   }
   //menu to allow Menu.js to update searchType
@@ -100,7 +116,7 @@ const App: () => React$Node = () => {
 
             <View>
               <Text style={styles.titleText}>BaseEcom</Text>
-              <Search />
+              <Search customData={customData} />
             </View>
             <View style={styles.headerIcons} size={30}>
               <Text key={addToCart} style={styles.cartNum}>
@@ -140,6 +156,7 @@ const App: () => React$Node = () => {
         customData={customData}
         handleOpenCart={handleOpenCart}
         handleRemoveFromCart={handleRemoveFromCart}
+        handleUpdateQty={handleUpdateQty}
         openCart={openCart}
         cartContents={cartContents}
       />

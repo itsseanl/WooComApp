@@ -25,6 +25,7 @@ const Cart = ({
   cartContents,
   handleOpenCart,
   handleRemoveFromCart,
+  handleUpdateQty,
   openCart,
 }) => {
   //fontawesome icons
@@ -91,6 +92,7 @@ const Cart = ({
                 product={product}
                 customData={customData}
                 handleRemoveFromCart={handleRemoveFromCart}
+                handleUpdateQty={handleUpdateQty}
               />
             );
           })
